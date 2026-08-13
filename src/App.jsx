@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 
-const API_URL = "https://krishivan-backend-xxxx.onrender.com/api/tasks"
+const API_URL = "https://krishivan-internship.onrender.com/api/tasks"
 
 function App() {
   const [tasks, setTasks] = useState([])
