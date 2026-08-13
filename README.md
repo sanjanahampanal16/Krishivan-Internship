@@ -1,227 +1,542 @@
-# Krishivan Internship Assignment
+# Krishivan Employee Task Management
 
-## Employee Task Management Module
+A responsive full-stack task management application built for the Krishivan Internship Assignment.
 
-Build a small full-stack task management module for Krishivan employees. The goal is to demonstrate how you understand a product requirement, make sensible implementation decisions, write maintainable code, and communicate your work.
+The application allows employees to create, view, edit, track, search, filter, and delete operational tasks connected to Farmer Producer Organizations (FPOs) or Micro-Entrepreneurs (MEs).
 
-This is an intern-level assignment, not a test of whether you know everything already. You may use documentation and ask questions. Where a detail is not specified, make a reasonable decision and explain it in your submission.
+## Features
 
-## Product context
+* Create new tasks
+* View all tasks
+* Edit existing tasks
+* Delete tasks with confirmation
+* Search tasks
+* Filter tasks by status and priority
+* Track task status through the required workflow:
 
-Krishivan works with employees, Farmer Producer Organizations (FPOs), and Micro-Entrepreneurs (MEs). Employees need a simple way to create, assign, track, and complete operational tasks connected to an FPO or ME.
+  * Pending
+  * In Progress
+  * Completed
+* Prevent invalid status transitions
+* Display task priority clearly
+* Highlight overdue tasks
+* Frontend validation
+* Backend validation using Mongoose
+* Loading, empty, success, and error states
+* Responsive layout for desktop, tablet, and mobile
+* Keyboard-accessible form controls
+* Semantic form labels
+* Readable color contrast
+* Persistent MongoDB storage
+* RESTful API using Express
 
-## Your goal
+## Technology Stack
 
-Create a responsive web application that allows a user to:
+### Frontend
 
-- View all tasks and their important details.
-- Create a new task.
-- Edit an existing task.
-- Delete a task after confirmation.
-- Move a task through the required workflow.
-- Find useful tasks using search and/or filters.
-- Clearly understand loading, empty, success, and error states.
+* React
+* Vite
+* JavaScript
+* CSS
+* Fetch API
 
-The required workflow is:
+### Backend
 
-`Pending` → `In Progress` → `Completed`
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* dotenv
+* CORS
 
-A completed task should not move backward unless you clearly document why you chose to support that behavior. Do not allow invalid status values.
+### Development Tools
 
-## Required task fields
+* Git
+* GitHub
+* Visual Studio Code
+* npm
 
-Each task must contain:
-
-| Field | Expected value |
-| --- | --- |
-| `title` | Short task name; required |
-| `description` | Helpful task details; optional but recommended |
-| `assignedEmployee` | Employee name or identifier; required |
-| `relatedEntityType` | Either `FPO` or `ME`; required |
-| `relatedEntity` | Name or identifier of the selected FPO/ME; required |
-| `priority` | `Low`, `Medium`, or `High`; required |
-| `dueDate` | Valid date; required |
-| `status` | `Pending`, `In Progress`, or `Completed`; defaults to `Pending` |
-
-The database should also record `createdAt` and `updatedAt`. You may add other fields if they improve the solution; document additions in the README.
-
-## Suggested technology
-
-- Frontend: React with Vite (starter included)
-- Backend: Node.js and Express
-- Database: MongoDB with Mongoose
-- Styling: plain CSS, CSS modules, or a UI library of your choice
-- API calls: `fetch` or Axios
-
-You may add well-justified libraries. Avoid adding a library for something that can be handled simply.
-
-## Frontend requirements
-
-Design and implement the user experience. At minimum, include:
-
-1. A task list using cards, a table, or a board.
-2. A create/edit form containing every required field.
-3. Clear visual treatment for priority, status, and overdue tasks.
-4. Controls to update task status while respecting the workflow.
-5. A delete confirmation.
-6. At least one useful search or filter option, such as status, priority, employee, or FPO/ME type.
-7. Loading, empty, validation, success, and API error feedback.
-
-The interface must work at mobile, tablet, and desktop widths. Use semantic HTML, associate labels with form fields, support keyboard use, and maintain readable color contrast.
-
-Do not copy the starter welcome screen as the final design. It exists only to confirm that React runs. You are expected to decide the layout and component structure.
-
-## Backend and API requirements
-
-Create an Express server inside `server/`. It should:
-
-- Connect to MongoDB using an environment variable.
-- Provide REST endpoints for task CRUD operations.
-- Validate request data on the server, not only in React.
-- Return consistent JSON responses and suitable HTTP status codes.
-- Return `404` for a missing task and useful `400` validation errors.
-- Handle unexpected errors without exposing secrets or stack traces to clients.
-- Enable CORS for local frontend development.
-- Keep credentials and connection strings out of Git.
-
-Suggested endpoints:
-
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| `GET` | `/api/tasks` | List tasks; optionally accept filter/search query parameters |
-| `GET` | `/api/tasks/:id` | Get one task |
-| `POST` | `/api/tasks` | Create a task |
-| `PUT` or `PATCH` | `/api/tasks/:id` | Edit a task or update its status |
-| `DELETE` | `/api/tasks/:id` | Delete a task |
-| `GET` | `/api/health` | Confirm that the server is running |
-
-You may adjust this API design if your alternative is consistent and documented.
-
-## MongoDB schema expectations
-
-Create a Mongoose model that represents the required fields and enforces:
-
-- Required values where specified.
-- Trimmed text and sensible length limits.
-- Enum values for type, priority, and status.
-- A valid due date.
-- Automatic timestamps.
-
-Think about whether status transitions should also be checked by the backend. Seed data is optional but helpful for review.
-
-## Validation expectations
-
-At minimum, prevent:
-
-- Blank required text fields.
-- Unknown priority, entity type, or status values.
-- Invalid dates.
-- Requests with malformed task IDs.
-- Invalid status transitions.
-
-Show field-level messages in the UI where practical. Server validation remains required even when the frontend validates the same input.
-
-## Suggested project structure
-
-You may change this structure if your choice is clear and maintainable.
+## Project Structure
 
 ```text
 Krishivan-Internship/
+│
 ├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── hooks/
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── styles.css
+│
 ├── server/
 │   ├── config/
+│   │   └── db.js
 │   ├── controllers/
-│   ├── middleware/
+│   │   └── taskController.js
 │   ├── models/
+│   │   └── task.js
 │   ├── routes/
+│   │   └── taskRoutes.js
 │   ├── app.js
-│   └── server.js
+│   ├── server.js
+│   ├── package.json
+│   └── package-lock.json
+│
 ├── .env.example
+├── .gitignore
 ├── index.html
 ├── package.json
 └── README.md
 ```
 
-## Getting started
+## Prerequisites
 
-### Prerequisites
+Before running the project, make sure the following are installed:
 
-- Node.js 20 or newer
-- npm
-- A local MongoDB instance or MongoDB Atlas connection
-- Git
+* Node.js 20 or newer
+* npm
+* MongoDB local installation or MongoDB Atlas
+* Git
 
-### Frontend starter
+## Environment Variables
+
+Environment variables are used to keep configuration and database credentials outside the source code.
+
+### Frontend
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+The frontend `.env` file should not be committed to Git.
+
+### Backend
+
+Create a `.env` file inside the `server/` directory:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+```
+
+Replace `your_mongodb_connection_string` with your MongoDB connection string.
+
+Never commit the real `.env` file or database credentials.
+
+## Installation
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Ritesh45C/Krishivan-Internship.git
 cd Krishivan-Internship
+```
+
+### 2. Install frontend dependencies
+
+```bash
 npm install
-cp .env.example .env
+```
+
+### 3. Install backend dependencies
+
+```bash
+cd server
+npm install
+```
+
+Then return to the project root:
+
+```bash
+cd ..
+```
+
+## Running the Application
+
+The frontend and backend run separately.
+
+### Start the backend
+
+Open a terminal in the project root:
+
+```bash
+cd server
+npm start
+```
+
+The backend will run at:
+
+```text
+http://localhost:5000
+```
+
+The API health endpoint can be checked at:
+
+```text
+http://localhost:5000/api/health
+```
+
+A successful response is:
+
+```json
+{
+  "success": true,
+  "message": "Krishivan API is running"
+}
+```
+
+### Start the frontend
+
+Open another terminal in the project root:
+
+```bash
 npm run dev
 ```
 
-The frontend environment example uses `http://localhost:5000/api`. Add a separate `server/.env.example` containing at least `PORT` and `MONGODB_URI` when you create the backend. Never commit a real `.env` file.
+Vite will start the frontend development server.
 
-Add clear backend install and run commands here as part of your submission. A reviewer should be able to start both sides from a fresh clone without guessing.
+The application normally runs at:
 
-## Git workflow
+```text
+http://localhost:5173
+```
 
-1. Create a feature branch, for example `feature/employee-task-management`.
-2. Make small, meaningful commits with clear messages.
-3. Push your branch and open a pull request to `main`.
-4. In the pull request, summarize the approach, include screenshots, provide test steps, and mention limitations or decisions.
-5. Do not commit secrets, `node_modules`, build output, or editor-specific files.
+If port 5173 is already in use, Vite may automatically use another available port.
 
-Ask before changing the assignment requirements. Questions and documented assumptions are welcome.
+## API Endpoints
 
-## Deliverables
+Base URL:
 
-- Working React frontend.
-- Working Node.js/Express API connected to MongoDB.
-- Mongoose task model and all required CRUD endpoints.
-- Responsive UI with the required states and validation.
-- Updated README with complete setup instructions and technical decisions.
-- `.env.example` files with placeholder values only.
-- A pull request with screenshots and testing notes.
+```text
+http://localhost:5000/api
+```
 
-Optional improvements include automated tests, sorting, pagination, dashboard counts, toast notifications, deployment, or seeded demo data. Complete the core requirements before optional work.
+| Method | Endpoint     | Purpose          |
+| ------ | ------------ | ---------------- |
+| GET    | `/tasks`     | Get all tasks    |
+| GET    | `/tasks/:id` | Get one task     |
+| POST   | `/tasks`     | Create a task    |
+| PUT    | `/tasks/:id` | Update a task    |
+| DELETE | `/tasks/:id` | Delete a task    |
+| GET    | `/health`    | Check API status |
 
-## Completion checklist
+## Task Fields
 
-- [ ] The app starts from the documented commands.
-- [ ] A user can create, view, edit, and delete a task.
-- [ ] Every required field is stored and displayed.
-- [ ] Status follows `Pending` → `In Progress` → `Completed`.
-- [ ] Frontend and backend validation handle invalid input gracefully.
-- [ ] Search or filtering is useful and functional.
-- [ ] Loading, empty, success, and error states are present.
-- [ ] The UI is usable on mobile and desktop.
-- [ ] MongoDB data remains available after a server restart.
-- [ ] No secrets or generated dependency folders are committed.
-- [ ] The README and pull request explain setup, decisions, and limitations.
+Each task contains the required fields from the assignment:
 
-## Assessment criteria
+| Field               | Description                                |
+| ------------------- | ------------------------------------------ |
+| `title`             | Required task name                         |
+| `description`       | Optional task details                      |
+| `assignedEmployee`  | Required employee name or identifier       |
+| `relatedEntityType` | `FPO` or `ME`                              |
+| `relatedEntity`     | Related FPO/ME name or identifier          |
+| `priority`          | `Low`, `Medium`, or `High`                 |
+| `dueDate`           | Required valid date                        |
+| `status`            | `Pending`, `In Progress`, or `Completed`   |
+| `createdAt`         | Automatically generated creation timestamp |
+| `updatedAt`         | Automatically updated timestamp            |
 
-| Area | Weight | What we will look for |
-| --- | ---: | --- |
-| Functionality | 30% | Core flows work reliably and meet the requirements |
-| Code quality | 20% | Clear naming, sensible components/modules, low duplication |
-| API and data design | 15% | Consistent REST behavior, schema quality, error handling |
-| UI/UX and responsiveness | 15% | Clear, accessible, useful experience across screen sizes |
-| Validation and reliability | 10% | Edge cases and failures are handled thoughtfully |
-| Git and documentation | 10% | Useful commits, reproducible setup, decisions explained |
+## Status Workflow
 
-We value good judgment, learning, and clear communication more than visual complexity. A smaller, reliable solution with documented decisions is stronger than an unfinished solution with many features.
+The application follows the required workflow:
 
-## Expected effort
+```text
+Pending
+   ↓
+In Progress
+   ↓
+Completed
+```
 
-Aim for approximately 4–7 working days. If you cannot finish everything, submit a working version, state what remains, and explain what you would do next.
+A completed task cannot move backward.
 
+The backend also validates status transitions so invalid requests cannot bypass the frontend.
+
+For example:
+
+```text
+Pending → In Progress      Allowed
+In Progress → Completed    Allowed
+Pending → Completed        Not allowed
+Completed → Pending        Not allowed
+Completed → In Progress    Not allowed
+```
+
+This validation is implemented on the server as well as reflected in the frontend controls.
+
+## Validation
+
+Validation is performed on both the frontend and backend.
+
+The application prevents:
+
+* Blank required fields
+* Invalid priority values
+* Invalid related entity types
+* Invalid status values
+* Invalid dates
+* Malformed MongoDB task IDs
+* Invalid status transitions
+* Missing tasks during update/delete operations
+
+The Mongoose schema also defines required fields, enum values, trimmed text, and reasonable text length limits.
+
+## Error Handling
+
+The backend returns consistent JSON responses.
+
+### Successful response
+
+```json
+{
+  "success": true,
+  "task": {}
+}
+```
+
+### Validation error
+
+```json
+{
+  "success": false,
+  "message": "Validation error message"
+}
+```
+
+### Missing task
+
+```json
+{
+  "success": false,
+  "message": "Task not found"
+}
+```
+
+### Invalid task ID
+
+```json
+{
+  "success": false,
+  "message": "Invalid task ID"
+}
+```
+
+Unexpected server errors are handled without exposing sensitive server information or stack traces to the client.
+
+## Search and Filtering
+
+The frontend provides useful task discovery controls.
+
+Users can search tasks and filter them based on task information such as:
+
+* Status
+* Priority
+
+This helps users quickly find operational tasks.
+
+## Responsive Design
+
+The interface is designed to work across:
+
+* Desktop
+* Tablet
+* Mobile
+
+Responsive CSS media queries adjust:
+
+* Navigation layout
+* Statistics cards
+* Search and filter controls
+* Task details
+* Forms
+* Buttons
+* Task action controls
+
+The application avoids requiring horizontal scrolling on smaller screens.
+
+## Accessibility
+
+Accessibility considerations include:
+
+* Semantic HTML elements
+* Labels associated with form inputs
+* Keyboard-accessible controls
+* Visible `focus-visible` states
+* Readable text
+* Sufficient color contrast
+* Responsive layouts
+* Clear button labels and feedback messages
+
+The application can be operated using a keyboard for the main interactive controls.
+
+## Loading, Empty, Success and Error States
+
+The frontend provides feedback for important application states.
+
+### Loading
+
+Displayed while tasks are being retrieved from the API.
+
+### Empty
+
+Displayed when there are no tasks or when search/filter criteria return no matching tasks.
+
+### Success
+
+Displayed after successful operations such as creating, editing, or deleting a task.
+
+### Error
+
+Displayed when an API request fails or validation fails.
+
+These states help the user understand what is happening instead of leaving the interface blank or unresponsive.
+
+## Database
+
+MongoDB is used for persistent task storage.
+
+Mongoose manages the task schema and database operations.
+
+The task model uses automatic timestamps:
+
+```text
+createdAt
+updatedAt
+```
+
+Because tasks are stored in MongoDB, the data remains available after restarting the Node.js server.
+
+## Technical Decisions
+
+### MongoDB + Mongoose
+
+MongoDB was selected because it fits the suggested technology stack and provides straightforward document-based storage for tasks.
+
+Mongoose provides schema validation, enums, timestamps, and database interaction.
+
+### REST API
+
+A REST-style API was used to keep the frontend and backend separated.
+
+The frontend communicates with the Express API using HTTP requests.
+
+### Backend Status Validation
+
+Status transition validation is implemented on the backend rather than relying only on the React interface.
+
+This prevents clients from bypassing the workflow rules.
+
+### Completed Tasks
+
+Completed tasks cannot move backward.
+
+This follows the assignment requirement that completed tasks should not move backward unless a different behavior is explicitly documented.
+
+### Responsive CSS
+
+Plain CSS was used instead of adding a UI library because the required interface can be implemented without an additional styling dependency.
+
+## Testing Performed
+
+The application was tested for the following flows:
+
+*  Backend starts successfully
+*  MongoDB connection succeeds
+*  Health endpoint responds successfully
+*  Tasks can be created
+*  Tasks can be displayed
+*  Tasks can be edited
+*  Tasks can be deleted
+*  Status can move from Pending to In Progress
+*  Status can move from In Progress to Completed
+*  Completed tasks cannot move backward
+*  Invalid task IDs are rejected
+*  Invalid enum values are rejected
+*  Blank required fields are rejected
+*  Invalid dates are rejected
+*  Search/filter functionality works
+*  Responsive layout works across screen sizes
+*  Keyboard focus states are visible
+*  Loading and error states are handled
+
+## Git Workflow
+
+Development was organized using Git.
+
+The implementation was committed with a meaningful commit message:
+
+```text
+feat: implement employee task management module
+```
+
+A dedicated feature branch was created:
+
+```text
+feature/employee-task-management
+```
+
+The intended workflow is:
+
+```text
+Create feature branch
+        ↓
+Make changes
+        ↓
+git add .
+        ↓
+git commit
+        ↓
+git push
+        ↓
+Create Pull Request
+        ↓
+Review
+        ↓
+Merge into main
+```
+
+## Security and Git Ignore
+
+The repository does not include:
+
+* `node_modules`
+* `.env`
+* `.env.local`
+* Build output
+* Log files
+* Editor-specific files
+
+Environment variables containing credentials should remain local and should never be committed.
+
+Only placeholder values are included in `.env.example` files.
+
+## Assumptions and Limitations
+
+* Employee names and FPO/ME names are entered as text because the assignment does not provide separate employee or organization collections.
+* Authentication and authorization are outside the scope of this internship assignment.
+* The application uses a single task collection.
+* Pagination is not implemented because it is an optional improvement and the assignment focuses on the core task-management functionality.
+* Automated tests are not included because the core functionality was prioritized first.
+* Deployment is outside the core assignment requirements.
+
+## Future Improvements
+
+Possible future enhancements include:
+
+* Employee authentication
+* Role-based access control
+* Separate employee and FPO/ME collections
+* Pagination
+* Sorting
+* Automated frontend and backend tests
+* Toast notifications
+* Dashboard analytics
+* Seed/demo data
+* Production deployment
+
+## Conclusion
+
+The Krishivan Employee Task Management module demonstrates a complete full-stack implementation using React, Express, MongoDB, and Mongoose.
+
+The application focuses on reliable CRUD operations, server-side validation, workflow enforcement, responsive UI design, accessibility, persistent data storage, and clear user feedback.
