@@ -388,15 +388,33 @@ Example response:
   "success": true,
   "tasks": []
 }
-
+```
 
 This endpoint retrieves a single task using its MongoDB document ID.
 
 Example request:
 
 ```text
-GET /api/tasks/64f123456789abcdef123456
+GET /api/tasks/:id
+```
+
+If the task exists, the API returns the task details.
+
+Example successful response:
+```json
+{
+  "success": true,
+  "tasks": []
+}
+```
+
+This endpoint retrieves a single task using its MongoDB document ID.
+
+Example request:
+
 ```text
+GET /api/tasks/:id
+```
 
 If the task exists, the API returns the task details.
 
