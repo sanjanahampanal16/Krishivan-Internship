@@ -357,8 +357,7 @@ The frontend communicates with the backend through REST API endpoints.
 
 The backend base URL for local development is:
 
-http://localhost:5000/api
-
+http://localhost:5000/api/health
 ### API Endpoints
 
 | Method | Endpoint | Purpose |
@@ -389,13 +388,7 @@ Example response:
   "success": true,
   "tasks": []
 }
-### Get a Single Task
 
-**Endpoint:**
-
-```text
-GET /api/tasks/:id
-```
 
 This endpoint retrieves a single task using its MongoDB document ID.
 
