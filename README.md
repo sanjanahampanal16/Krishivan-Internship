@@ -396,7 +396,7 @@ Example request:
 
 ```text
 GET /api/tasks/64f123456789abcdef123456
-```
+```text
 
 If the task exists, the API returns the task details.
 
