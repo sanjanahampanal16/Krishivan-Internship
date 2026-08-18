@@ -1,8 +1,18 @@
+import Login from "./Login"
 import { useEffect, useState, useRef } from "react"
 
 const API_URL = "https://krishivan-internship.onrender.com/api/tasks"
 
 function App() {
+const [isLoggedIn, setIsLoggedIn] = useState(
+  !!localStorage.getItem("token")
+)
+const handleLogout = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("user")
+  setIsLoggedIn(false)
+}
+
   const [tasks, setTasks] = useState([])
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("All")
@@ -282,30 +292,40 @@ setMessage("Task created successfully!")
   const completedCount = tasks.filter(
     (task) => task.status === "Completed"
   ).length
-
+if (!isLoggedIn) {
+  return <Login onLogin={() => setIsLoggedIn(true)} />
+}
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div className="brand">
-          <div className="brand-icon">K</div>
+  <div className="brand">
+    <div className="brand-icon">K</div>
 
-          <div>
-            <h2>Krishivan</h2>
-            <span>Employee Task Manager</span>
-          </div>
-        </div>
+    <div>
+      <h2>Krishivan</h2>
+      <span>Employee Task Manager</span>
+    </div>
+  </div>
 
-        <button
-          className="primary-button"
-          onClick={() => {
-            setEditingTaskId(null)
-            setShowForm(true)
-          }}
-        >
-          + New Task
-        </button>
-      </header>
+  <div className="header-actions">
+    <button
+      className="primary-button"
+      onClick={() => {
+        setEditingTaskId(null)
+        setShowForm(true)
+      }}
+    >
+      + New Task
+    </button>
 
+    <button
+      className="logout-button"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  </div>
+</header>
       <section className="dashboard">
         {loading && (
   <div className="info-message">
