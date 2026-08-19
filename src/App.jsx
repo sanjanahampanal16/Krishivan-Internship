@@ -6,9 +6,7 @@ const API_URL =
   "https://krishivan-internship-backend.onrender.com/api/tasks"
 
 function App() {
-const [isLoggedIn, setIsLoggedIn] = useState(
-  !!localStorage.getItem("token")
-)
+const [isLoggedIn, setIsLoggedIn] = useState(false)
 const [showSignup, setShowSignup] = useState(false)
 const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
