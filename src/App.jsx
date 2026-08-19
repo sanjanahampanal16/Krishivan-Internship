@@ -1,17 +1,32 @@
 import Login from "./Login"
+import Signup from "./Signup"
 import { useEffect, useState, useRef } from "react"
 
-const API_URL = "https://krishivan-internship.onrender.com/api/tasks"
+const API_URL =
+  "https://krishivan-internship-backend.onrender.com/api/tasks"
 
 function App() {
 const [isLoggedIn, setIsLoggedIn] = useState(
   !!localStorage.getItem("token")
 )
+const [showSignup, setShowSignup] = useState(false)
+const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+
 const handleLogout = () => {
+  setShowLogoutConfirm(true)
+}
+
+const confirmLogout = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("user")
   setIsLoggedIn(false)
+  setShowLogoutConfirm(false)
 }
+
+const cancelLogout = () => {
+  setShowLogoutConfirm(false)
+}
+
 
   const [tasks, setTasks] = useState([])
   const [search, setSearch] = useState("")
@@ -20,6 +35,7 @@ const handleLogout = () => {
   const [showForm, setShowForm] = useState(false)
   const [editingTaskId, setEditingTaskId] = useState(null)
   const [loading, setLoading] = useState(true)
+
 const [message, setMessage] = useState("")
 const [error, setError] = useState("")
 const formRef = useRef(null)
@@ -290,14 +306,63 @@ setMessage("Task created successfully!")
   ).length
 
   const completedCount = tasks.filter(
-    (task) => task.status === "Completed"
-  ).length
+  (task) => task.status === "Completed"
+).length
 if (!isLoggedIn) {
-  return <Login onLogin={() => setIsLoggedIn(true)} />
-}
+  if (showSignup) {
+    return (
+      <Signup
+        onSignup={() => setShowSignup(false)}
+      />
+    )
+  }
+
   return (
-    <main className="app-shell">
-      <header className="topbar">
+    <Login
+      onLogin={() => setIsLoggedIn(true)}
+      onSignup={() => setShowSignup(true)}
+    />
+  )
+}
+
+return (
+  <main className="app-shell">
+
+    {showLogoutConfirm && (
+      <div className="logout-overlay">
+        <div className="logout-modal">
+
+          <div className="logout-icon">↪</div>
+
+          <h2>Logout?</h2>
+
+          <p>
+            Are you sure you want to logout from your account?
+          </p>
+
+          <div className="logout-modal-actions">
+
+            <button
+              className="secondary-button"
+              onClick={cancelLogout}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="logout-confirm-button"
+              onClick={confirmLogout}
+            >
+              Yes, Logout
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    )}
+
+    <header className="topbar">
   <div className="brand">
     <div className="brand-icon">K</div>
 

@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function Login({ onLogin }) {
+function Login({ onLogin, onSignup }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -13,8 +13,8 @@ function Login({ onLogin }) {
     setLoading(true)
 
     try {
-     const response = await fetch(
-  "https://krishivan-internship.onrender.com/api/auth/login",
+      const response = await fetch(
+        "https://krishivan-internship-backend.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -32,10 +32,9 @@ function Login({ onLogin }) {
       if (data.success) {
         localStorage.setItem("token", data.token)
         localStorage.setItem("user", JSON.stringify(data.user))
-
         onLogin()
       } else {
-        setMessage(data.message)
+        setMessage(data.message || "Invalid email or password")
       }
     } catch (error) {
       console.error("Login error:", error)
@@ -59,8 +58,8 @@ function Login({ onLogin }) {
         </div>
 
         <div className="auth-heading">
-          <h2>Welcome back</h2>
-          <p>Login to manage your tasks</p>
+          <h2>Welcome back 👋</h2>
+<p>Login to continue managing your tasks</p>
         </div>
 
         <form onSubmit={handleLogin} className="auth-form">
@@ -104,21 +103,26 @@ function Login({ onLogin }) {
               {message}
             </div>
           )}
-
-          <button
-            type="submit"
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-
+<button
+  type="submit"
+  className="auth-button"
+  disabled={loading}
+>
+  {loading ? "Logging in..." : "Login"}
+</button>
+          
         </form>
 
-        <p className="auth-footer">
-          Don't have an account?{" "}
-          <span>Sign up</span>
-        </p>
+     <p className="auth-footer">
+  Don't have an account?{" "}
+  <button
+    type="button"
+    className="auth-link"
+    onClick={onSignup}
+  >
+    Sign up
+  </button>
+</p>
 
       </div>
     </main>

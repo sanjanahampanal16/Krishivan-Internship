@@ -1046,3 +1046,150 @@ textarea {
 .logout-button:hover {
   background: #f3f4f6;
 }
+
+.auth-message {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #eaf8ef;
+  color: #218739;
+  border: 1px solid #b9e5c3;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.auth-error {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #c62828;
+  border: 1px solid #f0b7b7;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.auth-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.10);
+}
+
+.auth-field input,
+.auth-field select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-field input:focus,
+.auth-field select:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.auth-button {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-footer span {
+  color: #2e7d32;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.auth-footer span:hover {
+  color: #1b5e20;
+  text-decoration: underline;
+}
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.logout-modal {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.logout-icon {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #fef2f2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.logout-modal h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.logout-modal p {
+  margin: 0 0 25px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.logout-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.logout-modal-actions button {
+  flex: 1;
+}
+
+.logout-confirm-button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 18px;
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-confirm-button:hover {
+  background: #b91c1c;
+}
+.auth-link {
+  border: none;
+  background: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
