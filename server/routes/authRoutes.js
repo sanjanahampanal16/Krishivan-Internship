@@ -1,6 +1,7 @@
 const express = require("express")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const crypto = require("crypto")
 const User = require("../models/user")
 
 const router = express.Router()
@@ -120,4 +121,53 @@ router.post("/login", async (req, res) => {
     })
   }
 })
+// Forgot Password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      })
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    })
+
+    // Don't reveal whether an email exists
+    if (!user) {
+      return res.json({
+        success: true,
+        message:
+          "If an account exists with this email, a password reset link will be generated.",
+      })
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex")
+
+    user.resetPasswordToken = resetToken
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000
+
+    await user.save()
+
+    console.log("Password reset token:", resetToken)
+
+    res.json({
+      success: true,
+      message:
+        "Password reset token generated successfully.",
+    })
+  } catch (error) {
+    console.error("Forgot password error:", error)
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    })
+  }
+})
+
 module.exports = router
