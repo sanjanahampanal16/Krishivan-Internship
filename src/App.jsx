@@ -1,13 +1,20 @@
 import Login from "./Login"
 import Signup from "./Signup"
+import ForgotPassword from "./ForgotPassword"
+import ResetPassword from "./ResetPassword"
 import { useEffect, useState, useRef } from "react"
 
 const API_URL =
   "https://krishivan-internship-backend.onrender.com/api/tasks"
 
 function App() {
+  const resetToken = window.location.pathname.startsWith("/reset-password/")
+  ? window.location.pathname.split("/reset-password/")[1]
+  : null
 const [isLoggedIn, setIsLoggedIn] = useState(false)
 const [showSignup, setShowSignup] = useState(false)
+const [showForgotPassword, setShowForgotPassword] = useState(false)
+const [showResetPassword, setShowResetPassword] = useState(false)
 const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
 const handleLogout = () => {
@@ -315,10 +322,33 @@ if (!isLoggedIn) {
     )
   }
 
+  if (showForgotPassword) {
+    return (
+      <ForgotPassword
+  onBack={() => setShowForgotPassword(false)}
+  onResetPassword={() => {
+    setShowForgotPassword(false)
+    setShowResetPassword(true)
+  }}
+/>
+    )
+  }
+  if (showResetPassword || resetToken) {
+  return (
+    <ResetPassword
+      token={resetToken}
+      onBackToLogin={() => {
+        window.history.pushState({}, "", "/")
+        setShowResetPassword(false)
+      }}
+    />
+  )
+}
   return (
     <Login
       onLogin={() => setIsLoggedIn(true)}
       onSignup={() => setShowSignup(true)}
+      onForgotPassword={() => setShowForgotPassword(true)}
     />
   )
 }

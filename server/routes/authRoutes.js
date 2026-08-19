@@ -1,17 +1,18 @@
 const express = require("express")
 const bcrypt = require("bcryptjs")
+const sendResetEmail = require("../utils/email")
 const jwt = require("jsonwebtoken")
 const crypto = require("crypto")
 const User = require("../models/user")
 
 const router = express.Router()
 
-// Signup
+// ==================== SIGNUP ====================
+
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body
 
-    // Check required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -19,8 +20,9 @@ router.post("/signup", async (req, res) => {
       })
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({
+      email: email.toLowerCase().trim(),
+    })
 
     if (existingUser) {
       return res.status(400).json({
@@ -29,13 +31,11 @@ router.post("/signup", async (req, res) => {
       })
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase().trim(),
       password: hashedPassword,
     })
 
@@ -49,7 +49,7 @@ router.post("/signup", async (req, res) => {
       },
     })
   } catch (error) {
-    console.error("Signup error:", error.message)
+    console.error("Signup error:", error)
 
     res.status(500).json({
       success: false,
@@ -57,12 +57,13 @@ router.post("/signup", async (req, res) => {
     })
   }
 })
-// Login
+
+// ==================== LOGIN ====================
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Check required fields
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -70,8 +71,9 @@ router.post("/login", async (req, res) => {
       })
     }
 
-    // Find user
-    const user = await User.findOne({ email })
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    })
 
     if (!user) {
       return res.status(401).json({
@@ -80,8 +82,10 @@ router.post("/login", async (req, res) => {
       })
     }
 
-    // Compare password
-    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user.password
+    )
 
     if (!isPasswordCorrect) {
       return res.status(401).json({
@@ -90,7 +94,6 @@ router.post("/login", async (req, res) => {
       })
     }
 
-    // Create JWT token
     const token = jwt.sign(
       {
         userId: user._id,
@@ -113,7 +116,7 @@ router.post("/login", async (req, res) => {
       },
     })
   } catch (error) {
-    console.error("Login error:", error.message)
+    console.error("Login error:", error)
 
     res.status(500).json({
       success: false,
@@ -121,7 +124,9 @@ router.post("/login", async (req, res) => {
     })
   }
 })
-// Forgot Password
+
+// ==================== FORGOT PASSWORD ====================
+
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body
@@ -137,12 +142,12 @@ router.post("/forgot-password", async (req, res) => {
       email: email.toLowerCase().trim(),
     })
 
-    // Don't reveal whether an email exists
+    // Don't reveal whether the account exists
     if (!user) {
       return res.json({
         success: true,
         message:
-          "If an account exists with this email, a password reset link will be generated.",
+          "If an account exists with this email, a password reset link has been sent.",
       })
     }
 
@@ -153,15 +158,77 @@ router.post("/forgot-password", async (req, res) => {
 
     await user.save()
 
-    console.log("Password reset token:", resetToken)
+    const resetLink =
+      `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
+
+    console.log("Reset link:", resetLink)
+
+    await sendResetEmail(user.email, resetLink)
 
     res.json({
       success: true,
       message:
-        "Password reset token generated successfully.",
+        "If an account exists with this email, a password reset link has been sent.",
     })
   } catch (error) {
     console.error("Forgot password error:", error)
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to send password reset email",
+    })
+  }
+})
+
+// ==================== RESET PASSWORD ====================
+
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params
+    const { password } = req.body
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: "New password is required",
+      })
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters",
+      })
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: {
+        $gt: Date.now(),
+      },
+    })
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token",
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    user.password = hashedPassword
+    user.resetPasswordToken = null
+    user.resetPasswordExpires = null
+
+    await user.save()
+
+    res.json({
+      success: true,
+      message: "Password reset successfully",
+    })
+  } catch (error) {
+    console.error("Reset password error:", error)
 
     res.status(500).json({
       success: false,
