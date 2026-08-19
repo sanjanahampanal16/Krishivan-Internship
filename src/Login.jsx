@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function Login({ onLogin, onSignup, onForgotPassword }) {
+function Login({ onLogin, onSignup,  }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -97,13 +97,7 @@ function Login({ onLogin, onSignup, onForgotPassword }) {
               </button>
             </div>
           </div>
-<button
-  type="button"
-  className="auth-link forgot-password"
-  onClick={onForgotPassword}
->
-  Forgot Password?
-</button>
+
           {message && (
             <div className="auth-error">
               {message}

@@ -13,8 +13,8 @@ function App() {
   : null
 const [isLoggedIn, setIsLoggedIn] = useState(false)
 const [showSignup, setShowSignup] = useState(false)
-const [showForgotPassword, setShowForgotPassword] = useState(false)
-const [showResetPassword, setShowResetPassword] = useState(false)
+
+
 const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
 const handleLogout = () => {
@@ -322,34 +322,13 @@ if (!isLoggedIn) {
     )
   }
 
-  if (showForgotPassword) {
-    return (
-      <ForgotPassword
-  onBack={() => setShowForgotPassword(false)}
-  onResetPassword={() => {
-    setShowForgotPassword(false)
-    setShowResetPassword(true)
-  }}
-/>
-    )
-  }
-  if (showResetPassword || resetToken) {
-  return (
-    <ResetPassword
-      token={resetToken}
-      onBackToLogin={() => {
-        window.history.pushState({}, "", "/")
-        setShowResetPassword(false)
-      }}
-    />
-  )
-}
+  
+ 
   return (
     <Login
-      onLogin={() => setIsLoggedIn(true)}
-      onSignup={() => setShowSignup(true)}
-      onForgotPassword={() => setShowForgotPassword(true)}
-    />
+  onLogin={() => setIsLoggedIn(true)}
+  onSignup={() => setShowSignup(true)}
+/>
   )
 }
 
