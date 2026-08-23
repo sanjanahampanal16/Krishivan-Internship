@@ -13,7 +13,7 @@ app.use(
       "https://krishivan-internship-1.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
+   allowedHeaders: ["Content-Type", "Authorization"],
   })
 )
 app.use(express.json())

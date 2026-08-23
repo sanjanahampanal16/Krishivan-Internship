@@ -8,7 +8,12 @@ const {
   deleteTask,
 } = require("../controllers/taskController")
 
+const authMiddleware = require("../middleware/authMiddleware")
+
 const router = express.Router()
+
+// All task routes require login
+router.use(authMiddleware)
 
 // Get all tasks
 router.get("/", getTasks)

@@ -1,17 +1,21 @@
 import Login from "./Login"
 import Signup from "./Signup"
-import ForgotPassword from "./ForgotPassword"
-import ResetPassword from "./ResetPassword"
+
 import { useEffect, useState, useRef } from "react"
 
 const API_URL =
   "https://krishivan-internship-backend.onrender.com/api/tasks"
+  const getAuthHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+})
 
 function App() {
-  const resetToken = window.location.pathname.startsWith("/reset-password/")
-  ? window.location.pathname.split("/reset-password/")[1]
-  : null
-const [isLoggedIn, setIsLoggedIn] = useState(false)
+  
+const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  return !!localStorage.getItem("token")
+})
+const [checkingAuth, setCheckingAuth] = useState(true)
 const [showSignup, setShowSignup] = useState(false)
 
 
@@ -44,6 +48,33 @@ const cancelLogout = () => {
 const [message, setMessage] = useState("")
 const [error, setError] = useState("")
 const formRef = useRef(null)
+useEffect(() => {
+  const token = localStorage.getItem("token")
+
+  if (!token) {
+    setIsLoggedIn(false)
+    setCheckingAuth(false)
+    return
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]))
+
+    if (payload.exp * 1000 < Date.now()) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      setIsLoggedIn(false)
+    } else {
+      setIsLoggedIn(true)
+    }
+  } catch (error) {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    setIsLoggedIn(false)
+  }
+
+  setCheckingAuth(false)
+}, [])
 
   const [formData, setFormData] = useState({
     title: "",
@@ -62,7 +93,9 @@ const formRef = useRef(null)
       setLoading(true)
       setError("")
 
-      const response = await fetch(API_URL)
+      const response = await fetch(API_URL, {
+  headers: getAuthHeaders(),
+})
       const data = await response.json()
 
       console.log("Tasks from backend:", data)
@@ -138,9 +171,7 @@ setError("")
         // UPDATE
         const response = await fetch(`${API_URL}/${editingTaskId}`, {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getAuthHeaders(),
           body: JSON.stringify({
             title: formData.title.trim(),
             description: formData.description.trim(),
@@ -313,6 +344,10 @@ setMessage("Task created successfully!")
   const completedCount = tasks.filter(
   (task) => task.status === "Completed"
 ).length
+
+if (checkingAuth) {
+  return null
+}
 if (!isLoggedIn) {
   if (showSignup) {
     return (
