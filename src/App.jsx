@@ -12,9 +12,7 @@ const API_URL =
 
 function App() {
   
-const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  return !!localStorage.getItem("token")
-})
+const [isLoggedIn, setIsLoggedIn] = useState(false)
 const [checkingAuth, setCheckingAuth] = useState(true)
 const [showSignup, setShowSignup] = useState(false)
 
@@ -94,8 +92,9 @@ useEffect(() => {
       setError("")
 
       const response = await fetch(API_URL, {
-  headers: getAuthHeaders(),
-})
+        headers: getAuthHeaders(),
+      })
+
       const data = await response.json()
 
       console.log("Tasks from backend:", data)
@@ -113,8 +112,10 @@ useEffect(() => {
     }
   }
 
-  fetchTasks()
-}, [])
+  if (isLoggedIn) {
+    fetchTasks()
+  }
+}, [isLoggedIn])
 
   // EDIT TASK
   const handleEditTask = (task) => {
@@ -199,9 +200,7 @@ setError("")
         // CREATE
         const response = await fetch(API_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: getAuthHeaders(),
           body: JSON.stringify({
             title: formData.title.trim(),
             description: formData.description.trim(),
@@ -259,8 +258,8 @@ setMessage("Task created successfully!")
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+        
+         headers: getAuthHeaders(),
         },
         body: JSON.stringify({
           ...task,
@@ -298,6 +297,7 @@ setMessage("Task created successfully!")
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
+         headers: getAuthHeaders(),
       })
 
       const data = await response.json()
