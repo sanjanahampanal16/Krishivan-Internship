@@ -255,19 +255,17 @@ setMessage("Task created successfully!")
       newStatus = "Completed"
     }
 
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        
-         headers: getAuthHeaders(),
-        },
-        body: JSON.stringify({
-          ...task,
-          status: newStatus,
-        }),
-      })
+   try {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      ...task,
+      status: newStatus,
+    }),
+  })
 
-      const data = await response.json()
+  const data = await response.json()
 
       if (data.success) {
   setTasks((currentTasks) =>
