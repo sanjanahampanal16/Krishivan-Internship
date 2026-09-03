@@ -1,3 +1,4 @@
+
 import { useState } from "react"
 
 function Login({ onLogin, onSignup }) {
@@ -9,8 +10,14 @@ function Login({ onLogin, onSignup }) {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    setMessage("")
+
+    if (!email || !password) {
+      setMessage("Please enter email and password")
+      return
+    }
+
     setLoading(true)
+    setMessage("")
 
     try {
       const response = await fetch(
@@ -29,43 +36,47 @@ function Login({ onLogin, onSignup }) {
 
       const data = await response.json()
 
-      if (data.success) {
-        localStorage.setItem("token", data.token)
-        localStorage.setItem("user", JSON.stringify(data.user))
-        onLogin()
-      } else {
-        setMessage(data.message || "Invalid email or password")
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid email or password")
       }
+
+      if (data.token) {
+        localStorage.setItem("token", data.token)
+      }
+
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user))
+      }
+
+      onLogin()
     } catch (error) {
-      console.error("Login error:", error)
-      setMessage("Unable to connect to server.")
+      setMessage(error.message || "Login failed")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <main className="auth-page">
+    <div className="auth-page">
+      <div className="auth-overlay"></div>
+
       <div className="auth-card">
-
-        <div className="auth-brand">
-          <div className="auth-logo">K</div>
-
-          <div>
-            <h1>Krishivan</h1>
-            <p>Employee Task Manager</p>
-          </div>
+        <div className="auth-logo-container">
+          <img
+            src="https://krishivantech.com/krishivan-logo.png"
+            alt="Krishivan"
+            className="auth-logo"
+          />
         </div>
 
-        <div className="auth-heading">
-          <h2>Welcome back 👋</h2>
-<p>Login to continue managing your tasks</p>
+        <div className="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Login to your employee task management account</p>
         </div>
 
-        <form onSubmit={handleLogin} className="auth-form">
-
-          <div className="auth-field">
-            <label>Email</label>
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <label>Email Address</label>
 
             <input
               type="email"
@@ -76,7 +87,7 @@ function Login({ onLogin, onSignup }) {
             />
           </div>
 
-          <div className="auth-field">
+          <div className="input-group">
             <label>Password</label>
 
             <div className="password-wrapper">
@@ -99,34 +110,35 @@ function Login({ onLogin, onSignup }) {
           </div>
 
           {message && (
-            <div className="auth-error">
+            <div className="auth-message">
               {message}
             </div>
           )}
-<button
-  type="submit"
-  className="auth-button"
-  disabled={loading}
->
-  {loading ? "Logging in..." : "Login"}
-</button>
-          
+
+          <button
+            type="submit"
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </form>
 
-     <p className="auth-footer">
-  Don't have an account?{" "}
-  <button
-    type="button"
-    className="auth-link"
-    onClick={onSignup}
-  >
-    Sign up
-  </button>
-</p>
+        <div className="auth-footer">
+          <span>Don't have an account?</span>
 
+          <button
+            type="button"
+            className="switch-auth"
+            onClick={onSignup}
+          >
+            Create Account
+          </button>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }
 
 export default Login
+
